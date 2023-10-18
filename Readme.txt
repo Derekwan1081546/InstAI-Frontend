@@ -21,7 +21,7 @@ CREATE TABLE test.photo(
     image_data LONGBLOB NOT NULL
 );
 接下來回到terminal 
-隨後就可以打開專案 npm start 成功後會看到 Connected to MYSQL database
+隨後就可以打開專案 npm start ，同時開啟後端，成功後會在後端terminal看到 Connected to MYSQL database
 打開以下網址: localhost:3000
 
 
