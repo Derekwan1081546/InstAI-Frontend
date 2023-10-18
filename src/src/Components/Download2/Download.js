@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import loginstyle from "./Download.module.css";
+import axios from 'axios';
 
 function Download2() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -18,29 +19,83 @@ function Download2() {
       allowedFileTypes.includes(file.type)
     );
 
-    // 使用formData
-    const formData = new FormData();
-    formData.append('username', username); // 用户名
-    formData.append('filename', filename); // 文件名
-    filteredFiles.forEach((file, index) => {
-      formData.append(`images`, file); 
+    // Add the selected files to the state
+    setSelectedFiles(filteredFiles);//add
+    setUsername("${username}");//add
+    const user_name="${username}"
+    selectedFiles.forEach((file)=>{
+      setFilename(file.name);//add
+      try {
+        // 发送请求到URL
+        console.log(file.name);
+        console.log('发送请求到URL:',file.name, 'http://localhost:8080/api/upload/download');//?filename=${filename}&username=${username}
+        // const response = await fetch('http://localhost:8080/api/upload/download', {
+        //   method: 'GET',
+        //   body: formData,
+        // });
+        axios.get(`http://localhost:8080/api/upload/download?filename=${file.name}&username=${user_name}`, { responseType: 'blob' })
+          .then(response => {
+            console.log(response.data);
+            // Handle success
+            alert('download success')
+            // Get the filename from the custom header (X-Filename)
+            //const downloadedFilename = response.headers['x-filename'];
+  
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.setAttribute("download",file.name);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          })
+          .catch(error => {
+            console.error(error);
+            console.error('文件上傳失敗');
+            // Handle error
+          });
+      } catch (error) {
+        console.error('发生错误:', error);
+      }
+  
     });
+
+    // 使用formData
+    // const formData = new FormData();
+    // formData.append('username', username); // 用户名
+    // formData.append('filename', filename); // 文件名
+    // filteredFiles.forEach((file, index) => {
+    //   formData.append(`images`, file); 
+    // });
 
     try {
       // 发送请求到URL
-      console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download?filename=${filename}&username=${username}');
-      const response = await fetch('http://localhost:8080/api/upload/download?filename=${filename}&username=${username}', {
-        method: 'POST',
-        body: formData,
-      });
-      console.log('收到后端响应:', response);
-      if (response.ok) {
-        // 上傳到後端
-        console.log('文件上传成功');
-      } else {
-        // 處理失敗則
-        console.error('文件上传失败');
-      }
+      console.log('发送请求到URL:', 'http://localhost:8080/api/upload/download');//?filename=${filename}&username=${username}
+      // const response = await fetch('http://localhost:8080/api/upload/download', {
+      //   method: 'GET',
+      //   body: formData,
+      // });
+      axios.get(`http://localhost:8080/api/upload/download?filename=${filename}&username=${username}`, { responseType: 'blob' })
+        .then(response => {
+          console.log(response.data);
+          // Handle success
+          alert('download success')
+          // Get the filename from the custom header (X-Filename)
+          const downloadedFilename = response.headers['x-filename'];
+
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const a = document.createElement('a');
+          a.href = url;
+          a.setAttribute("download",filename);
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        })
+        .catch(error => {
+          console.error(error);
+          console.error('文件上傳失敗');
+          // Handle error
+        });
     } catch (error) {
       console.error('发生错误:', error);
     }
@@ -50,11 +105,11 @@ function Download2() {
     setImagePreviews([...imagePreviews, ...previews]);
   };
 
-  // 文件下載
+  // 文件下載 //modified
   const handleDownload = (file) => {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(file);
-    a.download = file.name;
+    a.href = window.URL.createObjectURL(new Blob([file]));
+    a.setAttribute("download", file.name);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -78,12 +133,13 @@ function Download2() {
     setSelectedFiles([]);
   };
 
-  // 下載預覽
+  // 下載預覽 //modified
   const handleDownloadAll = () => {
     selectedFiles.forEach((file) => {
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(file);
-      a.download = file.name;
+      a.href = window.URL.createObjectURL(new Blob([file]));
+      console.log(a.href)
+      a.setAttribute("download", file.name);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

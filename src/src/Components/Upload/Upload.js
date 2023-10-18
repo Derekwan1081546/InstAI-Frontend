@@ -30,10 +30,10 @@ function App() {
         console.log(files)
         const formData = new FormData();
         for(let i =0;i<uploaded.length;++i){
-          formData.append('images', uploaded[i]);
+          formData.append('file', uploaded[i]);
         }
         
-        axios.post('http://localhost:8080/api/upload/upload?username=${username}', formData)
+        axios.post(`http://localhost:8080/api/upload/upload?username=${"${username}"}`, formData)
         .then(response => {
           console.log(response.data);
           // Handle success

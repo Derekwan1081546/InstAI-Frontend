@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment} from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import basestyle from "../Base.module.css";
 import registerstyle from "./Register.module.css";
 import axios from "axios";
@@ -22,7 +22,7 @@ const Register = () => {
     setUserDetails((prevUser) => ({
       ...prevUser,
       [name]: value,
-    }))
+    }));
   };
   //# register regulation verify the form of register table.
   const validateForm = (values) => {
@@ -63,22 +63,24 @@ const Register = () => {
     // }
   };
 
- //# register demo 
+  //# register demo
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
-      axios.post("http://localhost:8080/api/account/signup/", user).then((res) => {
-      alert(res.data);
-        navigate("/login", { replace: true });
-      });
+      axios
+        .post("http://localhost:8080/api/account/signup/", user)
+        .then((res) => {
+          alert(res.data);
+          navigate("/login", { replace: true });
+        });
     }
   }, [formErrors]);
   // web rendering for Register
   return (
     <Fragment>
-      <div className = {registerstyle.container}>
+      <div className={registerstyle.container}>
         <header>
-          <h1>InstAi</h1> 
+          <h1>InstAi</h1>
         </header>
         <div className={registerstyle.register}>
           <form>
@@ -96,7 +98,7 @@ const Register = () => {
             <input
               type="text"
               name="lname"
-              id = "lname"
+              id="lname"
               onChange={changeHandler}
               value={user.lname}
             />
@@ -131,10 +133,14 @@ const Register = () => {
             <button className={basestyle.button_common} onClick={signupHandler}>
               SIGN UP
             </button>
-            <NavLink className = {registerstyle.NavLink} to="/login">Sign in to existing account</NavLink>
+            <NavLink className={registerstyle.NavLink} to="/login">
+              Sign in to existing account
+            </NavLink>
           </form>
         </div>
-        <div className = {registerstyle.email}>Have questions? Send email to <b>support@instai.co</b></div>
+        <div className={registerstyle.email}>
+          Have questions? Send email to <b>support@instai.co</b>
+        </div>
       </div>
     </Fragment>
   );

@@ -4,7 +4,6 @@ import loginstyle from "./Login.module.css";
 import axios from "axios";
 import { useNavigate, NavLink } from "react-router-dom";
 
-
 const Login = ({ setUserState }) => {
   const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
@@ -13,13 +12,13 @@ const Login = ({ setUserState }) => {
     email: "",
     password: "",
   });
-  
-// 使用useState管理組件 表單錯誤,遞交,使用者
+
+  // 使用useState管理組件 表單錯誤,遞交,使用者
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setUserDetails((prevUser) => ({
       ...prevUser,
-      [name]:value,
+      [name]: value,
     }));
   };
   const validateForm = (values) => {
@@ -50,20 +49,22 @@ const Login = ({ setUserState }) => {
   useEffect(() => {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(user);
-      axios.post("http://localhost:8081/api/account/login", user).then((res) => {
-        alert(res.data);
-        if(res.data == 'Success'){
-          setUserState(res.data.user);
-        navigate("/MainPage", { replace: true });}
-        
-      });
+      axios
+        .post("http://localhost:8080/api/account/login", user)
+        .then((res) => {
+          alert(res.data);
+          if (res.data == "Success") {
+            setUserState(res.data.user);
+            navigate("/MainPage", { replace: true });
+          }
+        });
     }
   }, [formErrors]);
   return (
     <Fragment>
-      <div className = {loginstyle.container}>
+      <div className={loginstyle.container}>
         <header>
-          <h1>InstAi</h1> 
+          <h1>InstAi</h1>
         </header>
         <div className={loginstyle.login}>
           <form>
@@ -78,7 +79,7 @@ const Login = ({ setUserState }) => {
             />
             <p className={basestyle.error}>{formErrors.email}</p>
             <label>Password</label>
-            <input 
+            <input
               type="password"
               name="password"
               id="password"
@@ -87,13 +88,16 @@ const Login = ({ setUserState }) => {
             />
             <p className={basestyle.error}>{formErrors.password}</p>
             <button className={basestyle.button_common} onClick={loginHandler}>
-                SIGN IN
+              SIGN IN
             </button>
-            <NavLink className={loginstyle.NavLink} to="/">Create a new account</NavLink>
+            <NavLink className={loginstyle.NavLink} to="/">
+              Create a new account
+            </NavLink>
           </form>
-
         </div>
-        <div className = {loginstyle.email}>Have questions? Send email to <b>support@instai.co</b></div>
+        <div className={loginstyle.email}>
+          Have questions? Send email to <b>support@instai.co</b>
+        </div>
       </div>
     </Fragment>
   );
