@@ -29,6 +29,9 @@ import ResizeWidth from "../ForHireFix/ResizeWidth";
 
 /*1*/
 function TxtPage() {
+  const [images, setImages] = useState([]);
+  const [dataURL,seturl] = useState([])
+  const [error, setError] = useState(null);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isHiresChecked, setIsHiresChecked] = useState(false);
   const [formData, setFormData] = useState({
@@ -94,11 +97,24 @@ function TxtPage() {
       Jsonfunction(TxtToImgData);
     }
   };
+
+  const downloadSingleImage = (base64, index) => {
+    const link = document.createElement('a');
+    link.href = base64;
+    link.download = `image_${index + 1}.jpg`;
+    link.click();
+  };
+
 /*5*/
   async function Jsonfunction(TxtToImgData) {
     try {
-      await axios.post("http://localhost:8080/api/txt2img/process", TxtToImgData.request);
+      const response = await axios.post("http://localhost:8080/api/txt2img/process", TxtToImgData.request);
       alert("轉換成功");
+      const base64Data = response.data; // Replace with the actual base64-encoded image data
+      const dataURL = `data:image/png;base64,${base64Data}`;
+      seturl(dataURL);
+      setImages(response.data);
+      setError(null); // 清出錯誤
     } catch (error) {
       console.error("Error sending data to backend:", error);
     }
@@ -310,6 +326,19 @@ function TxtPage() {
           </div>
         </div>
 
+      </div>
+
+      <div className="txt2img-section20">
+      {images.map((base64, index) => (
+        <div key={index} className="image-item">
+          {dataURL ? ( // Check if dataURL is not empty
+            <img src={dataURL} alt={`Image ${index}`} loading="lazy" />
+          ) : (
+            <p>Error loading image</p>
+          )}
+          <button onClick={() => downloadSingleImage(dataURL, index)}>下載</button>
+        </div>
+      ))}
       </div>
      
     </div>

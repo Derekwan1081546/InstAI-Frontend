@@ -11,11 +11,11 @@ function MainPage(){
                 Provide the function of uploading images and downloading images
             </div>
             <span style ={{position:'relative',top:"60px",right:'80px'}}>
-                <NavLink to="/Download2"> single image</NavLink>
+                <NavLink to="/Upload"> upload image</NavLink>
             </span>
             <br/>
-            <span style ={{position:'relative',top:"70px",right:'80px'}}>
-                <NavLink to="/Download2"> folder</NavLink>
+            <span style ={{position:'relative',top:"60px",right:'80px'}}>
+                <NavLink to="/Download2"> download image</NavLink>
             </span>
         </div>
         <div className={Mainstyle.login}>
