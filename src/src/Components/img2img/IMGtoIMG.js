@@ -67,10 +67,16 @@ function ImgPage() {
     }; 
 
   const handleFormDataChange = (fieldName, value) => {
+    // if(fieldName==="init_images"){
+    //   const base64Data = value; // Replace with the actual base64-encoded image data
+    //   const base64string = `data:image/png;base64,${base64Data}`;
+    //   value = base64string;
+    // }
     setImgData((prevData) => ({
       ...prevData,
       [fieldName]: value,
     }));
+    
   
     // 查看更新
     console.log(`Field ${fieldName} updated to:`, value);
@@ -101,6 +107,30 @@ function ImgPage() {
     link.download = `image_${index + 1}.jpg`;
     link.click();
   };
+
+
+  // Function to fetch and encode an image as Base64
+  async function encodeImageAsBase64(imageUrl) {
+    try {
+      const response = await fetch(imageUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        const reader = new FileReader();
+  
+        reader.onload = function () {
+          const base64String = reader.result.split(',')[1];
+          // Use 'base64String' in your request data or wherever needed.
+          console.log('Base64 image:', base64String);
+        };
+  
+        reader.readAsDataURL(blob);
+      } else {
+        console.error('Failed to fetch the image.');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
 
   async function jsonFunction(imgToImgData) {
     try {
