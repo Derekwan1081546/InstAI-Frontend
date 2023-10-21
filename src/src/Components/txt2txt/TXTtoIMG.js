@@ -110,9 +110,9 @@ function TxtPage() {
     try {
       const response = await axios.post("http://localhost:8080/api/txt2img/process", TxtToImgData.request);
       alert("轉換成功");
-      const base64Data = response.data; // Replace with the actual base64-encoded image data
-      const dataURL = `data:image/png;base64,${base64Data}`;
-      seturl(dataURL);
+      // const base64Data = response.data; // Replace with the actual base64-encoded image data
+      // const dataURL = `data:image/png;base64,${base64Data}`;
+      // seturl(dataURL);
       setImages(response.data);
       setError(null); // 清出錯誤
     } catch (error) {
@@ -330,14 +330,14 @@ function TxtPage() {
 
       <div className="txt2img-section20">
       {images.map((base64, index) => (
-        <div key={index} className="image-item">
-          {dataURL ? ( // Check if dataURL is not empty
-            <img src={dataURL} alt={`Image ${index}`} loading="lazy" />
+        <span key={index} className="image-item">
+          {`data:image/png;base64,${base64}` ? ( // Check if dataURL is not empty
+            <img src={`data:image/png;base64,${base64}`} alt={`Image ${index}`} loading="lazy" />
           ) : (
             <p>Error loading image</p>
           )}
-          <button onClick={() => downloadSingleImage(dataURL, index)}>下載</button>
-        </div>
+          <button onClick={() => downloadSingleImage(`data:image/png;base64,${base64}`, index)}>下載</button>
+        </span>
       ))}
       </div>
      

@@ -67,11 +67,6 @@ function ImgPage() {
     }; 
 
   const handleFormDataChange = (fieldName, value) => {
-    // if(fieldName==="init_images"){
-    //   const base64Data = value; // Replace with the actual base64-encoded image data
-    //   const base64string = `data:image/png;base64,${base64Data}`;
-    //   value = base64string;
-    // }
     setImgData((prevData) => ({
       ...prevData,
       [fieldName]: value,
@@ -108,37 +103,13 @@ function ImgPage() {
     link.click();
   };
 
-
-  // Function to fetch and encode an image as Base64
-  async function encodeImageAsBase64(imageUrl) {
-    try {
-      const response = await fetch(imageUrl);
-      if (response.ok) {
-        const blob = await response.blob();
-        const reader = new FileReader();
-  
-        reader.onload = function () {
-          const base64String = reader.result.split(',')[1];
-          // Use 'base64String' in your request data or wherever needed.
-          console.log('Base64 image:', base64String);
-        };
-  
-        reader.readAsDataURL(blob);
-      } else {
-        console.error('Failed to fetch the image.');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-  }
-
   async function jsonFunction(imgToImgData) {
     try {
       const response = await axios.post("http://localhost:8080/api/img2img/process", imgToImgData.request);
       alert("轉換成功");
-      const base64Data = response.data; // Replace with the actual base64-encoded image data
-      const dataURL = `data:image/png;base64,${base64Data}`;
-      seturl(dataURL);
+      // const base64Data = response.data; // Replace with the actual base64-encoded image data
+      // const dataURL = `data:image/png;base64,${base64Data}`;
+      // seturl(dataURL);
       setImages(response.data);
       setError(null); // 清出錯誤
     } catch (error) {
@@ -321,14 +292,22 @@ function ImgPage() {
       </div>
       <div className="img2img-section23">
       {images.map((base64, index) => (
-        <div key={index} className="image-item">
-          {dataURL ? ( // Check if dataURL is not empty
-            <img src={dataURL} alt={`Image ${index}`} loading="lazy" />
-          ) : (
-            <p>Error loading image</p>
-          )}
-          <button onClick={() => downloadSingleImage(dataURL, index)}>下載</button>
-        </div>
+        <span key={index} className="image-item">
+        {`data:image/png;base64,${base64}` ? ( // Check if dataURL is not empty
+          <img src={`data:image/png;base64,${base64}`} alt={`Image ${index}`} loading="lazy" />
+        ) : (
+          <p>Error loading image</p>
+        )}
+        <button onClick={() => downloadSingleImage(`data:image/png;base64,${base64}`, index)}>下載</button>
+        </span>
+        // <div key={index} className="image-item">
+        //   {dataURL ? ( // Check if dataURL is not empty
+        //     <img src={dataURL} alt={`Image ${index}`} loading="lazy" />
+        //   ) : (
+        //     <p>Error loading image</p>
+        //   )}
+        //   <button onClick={() => downloadSingleImage(dataURL, index)}>下載</button>
+        // </div>
       ))}
       </div>
     </div>
